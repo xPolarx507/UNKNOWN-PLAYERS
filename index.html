@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unknown Players</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('logofondo1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            scroll-behavior: smooth;
+            text-align: center;
+        }
+
+        header {
+            background-color: rgba(58, 58, 58, 0.8);
+            padding: 15px;
+        }
+
+        nav ul {
+            list-style-type: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 15px;
+        }
+
+        .audio-controls {
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column; /* Cambiado a columna para los botones y la barra de volumen */
+            align-items: center; /* Centrar los elementos */
+            background-color: rgba(42, 42, 42, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            width: fit-content; /* Ajustar el ancho al contenido */
+            margin-top: 40px;
+        }
+
+        .audio-button {
+            width: 40px;
+            height: 40px;
+            background-color: #ffcc00;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            margin: 5px; /* Espaciado entre botones */
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .audio-button:hover {
+            transform: scale(1.1);
+        }
+
+        #play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 8px solid #fff;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #pause-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffcc00;
+        }
+
+        #pause-button::before,
+        #pause-button::after {
+            content: '';
+            width: 6px;
+            height: 20px;
+            background-color: #fff;
+            margin: 0 3px;
+            border-radius: 2px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #pause-button:hover::before,
+        #pause-button:hover::after {
+            background-color: #ffcc00;
+            transform: scale(1.1);
+        }
+
+        /* Estilos de la barra de volumen */
+        input[type="range"] {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 10px;
+            appearance: none;
+            background: #ffcc00; /* Color de fondo de la barra */
+            border-radius: 5px;
+            height: 5px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ffffff; /* Color del botón de la barra */
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(42, 42, 42, 0.8);
+            border-radius: 8px;
+        }
+
+        section img {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(58, 58, 58, 0.8);
+        }
+
+        .contact-link {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .contact-link img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .toggle-title {
+            cursor: pointer;
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .recruit-link {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        /* Carrusel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .carousel {
+            display: flex;
+            overflow: transform 0.5s ease;
+        }
+
+        .carousel img {
+            width: 100%;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .carousel-button.prev {
+            left: 10px;
+        }
+
+        .carousel-button.next {
+            right: 10px;
+        }
+
+        .carousel-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Unknown Players</h1>
+        <h2>E - SPORTS</h2>
+        <nav>
+            <ul>
+                <li><a href="#mision-vision">Misión y Visión</a></li>
+                <li><a href="#quienes-somos">¿Quiénes Somos?</a></li>
+                <li><a href="#scrims">Scrims</a></li>
+                <li><a href="#competitivos">Competitivos</a></li>
+                <li><a href="#reglas">Reglas</a></li>
+                <li><a href="#reclutamiento">Reclutamiento</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="mision-vision">
+            <h2 class="toggle-title">Misión</h2>
+            <div class="content" style="display: block;">
+                <p>Nuestra misión es fomentar un ambiente competitivo y colaborativo donde cada miembro pueda crecer como jugador.</p>
+                <br>
+            </div>
+            <h2 class="toggle-title">Visión</h2>
+            <div class="content" style="display: block;">
+                <p>Ser un referente en la comunidad gamer, reconocidos por nuestras habilidades y trabajo en equipo.</p>
+            </div>
+        </section>
+
+        <section id="quienes-somos">
+            <h2 class="toggle-title">¿Quiénes Somos?</h2>
+            <div class="content" style="display: block;">
+                <p>Somos un equipo apasionado de gamers que busca la excelencia en los juegos. Participamos en competiciones y scrims, siempre mejorando y aprendiendo juntos.</p>
+                <br>
+                <img src="unknown_logo.png" alt="BSK - E - Sport">
+            </div>
+        </section>
+
+        <section id="scrims">
+            <h2 class="toggle-title">Scrims</h2>
+            <div class="content">
+                <p>Participamos en scrims regularmente para mejorar nuestras habilidades y estrategias.</p>
+                <br><h3>Referencia más reciente</h3>
+                
+                
+                <br>
+                
+                <!-- Primer carrusel -->
+                <h3>Scrim</h3>
+                <div class="carousel-container">
+                    <button class="carousel-button prev" onclick="moveSlide(-1, 1)">&#10094;</button>
+                    <div class="carousel" id="carousel1">
+                        <img src="podium.jpg" alt="Scrim Podium">
+                        <img src="tabla.jpg" alt="Scrim tabla">
+                        <img src="ganador1.jpg" alt="Scrim ganador">
+                    </div>
+                    <button class="carousel-button next" onclick="moveSlide(1, 1)">&#10095;</button>
+                </div>
+                
+                <br>
+        
+                <!-- Segundo carrusel -->
+                <h3>Scrim - Rush Gaming</h3>
+                <div class="carousel-container">
+                    <button class="carousel-button prev" onclick="moveSlide(-1, 2)">&#10094;</button>
+                    <div class="carousel" id="carousel2">
+                        <img src="podium rush gaming.jpg" alt="Scrim Podium rush gaming">
+                        <img src="rush gaming.jpg" alt="Scrim equipos rush gaming">
+                        <img src="ganador rush gaming.jpg" alt="Scrim ganador rush gaming">
+                    </div>
+                    <button class="carousel-button next" onclick="moveSlide(1, 2)">&#10095;</button>
+                </div>
+        
+            </div>
+        </section>
+        
+
+        <section id="competitivos">
+            <h2 class="toggle-title">Competitivos</h2>
+            <div class="content">
+                <p>Participamos en diversas competiciones a nivel local e internacional. ¡Mantente al tanto de nuestras victorias!</p>
+                <br><h3>Referencia más reciente</h3>
+                <img src="versus-red-zone.jpeg" alt="Versus contra Red Zone">
+                <img src="versus-rebeldes.jpeg" alt="Versus contra Rebeldes">
+            </div>
+        </section>
+
+        <section id="reglas">
+            <h2 class="toggle-title">Reglas</h2>
+            <div class="content">
+                <h3>Duelo de escuadras - Competitivo</h3>
+                <img src="reglas - duelo.png" alt="Reglas de duelo de escuadras" style="max-width: 600px;">
+                <p>1. Respeto entre escuadras.<br>
+                   2. Estrategias acordadas previamente.<br>
+                   3. Sin trampas ni hacks.</p>
+                <br>
+                <h3>Campo abierto</h3>
+                <img src="reglas - campo abierto.png" alt="Reglas de campo abierto" style="max-width: 600px;">
+                <h3>Mapa</h3>
+                <img src="mapa.png" alt="Mapa de campo abierto" style="max-width: 600px;">
+                <p>1. Jugar de manera justa y honesta.<br>
+                   2. Mantener el juego limpio.<br>
+                   3. Respetar las decisiones del organizador.</p>
+            </div>
+        </section>
+
+        <section id="reclutamiento">
+            <h2 class="toggle-title">Reclutamiento</h2>
+            <div class="content" style="display: block;">
+                <p>Chicos/as ¡Estamos buscando nuevos talentos! Si estás interesado/da en unirte a nuestro equipo, <a class="recruit-link" href="https://chat.whatsapp.com/IGzL7vMUCnK845raZnYRIE" target="_blank">haz clic aquí</a> para más información.</p>
+            </div>
+        </section>
+
+        <section id="contacto">
+            <h2 class="toggle-title">Contactos</h2>
+            <p>Para organización de Competitivo o Campo Abierto, contactar por medio de nuestras redes sociales</p>
+            <div class="content" style="display: block;">
+                <div class="contact-link">
+                    <a href="https://www.instagram.com/_unknownn.players" target="_blank">
+                        <img src="instagramlogo.png" alt="Logo de insta">
+                    </a>
+                </div>
+                <div class="contact-link">
+                    <a href="https://wa.me/+50765325921" target="_blank">
+                        <img src="whastapp logo.png" alt="WhatsApp Logo">
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de música centrada antes del footer -->
+        <div class="audio-controls">
+            <audio id="background-music" loop>
+                <source src="polar-mvp.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <button id="play-button" class="audio-button"></button> <button id="pause-button" class="audio-button"></button>
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="1">
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Unknownn Players. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Reproduce música al cargar la página
+        window.onload = function() {
+            const music = document.getElementById('background-music');
+            music.play();
+        };
+
+        // Selecciona todos los títulos que tienen la clase 'toggle-title'
+        const toggleTitles = document.querySelectorAll('.toggle-title');
+
+        // Añade un evento de clic a cada título
+        toggleTitles.forEach(title => {
+            title.addEventListener('click', () => {
+                const content = title.nextElementSibling;
+
+                // Cambia la visibilidad del contenido siguiente
+                if (content.style.display === 'none' || content.style.display === '') {
+                    content.style.display = 'block';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+
+        // Control de reproducción de música
+        document.getElementById('play-button').addEventListener('click', () => {
+            const music = document.getElementById('background-music');
+            music.play();
+        });
+ 
+        document.getElementById('pause-button').addEventListener('click', () => {
+            const music = document.getElementById('background-music');
+            music.pause();
+        });
+
+        // Control de volumen
+        document.getElementById('volume-control').addEventListener('input', (e) => {
+            const music = document.getElementById('background-music');
+            music.volume = e.target.value;
+        });
+        //objeto que lleva el control de las imagenes mostradas en cada carrusel
+        let currentSlide = {
+            1:0, //carrusel 1
+            2:0 //carrusel 2
+        };
+        //funcion para mover las imagenes en el carrusel correspondiente
+        function moveSlide(direction, carouselId) {
+            const slides = document.querySelectorAll(`#carousel${carouselId} img`);
+            const totalSlides = slides.length;
+            
+            //indice del carrusel seleccionado
+            currentSlide[carouselId] = (currentSlide[carouselId] + direction + totalSlides) % totalSlides;
+            
+            //se calcula el desplazamiento en porcentaje
+            const offset = -currentSlide[carouselId] * 100;
+
+            //se aplica la transformacion "TranslateX" para moverl el carrusel
+            document.querySelector(`#carousel${carouselId}`).style.transform = `translateX(${offset}%)`;        }
+    </script>
+</body>
+</html>
